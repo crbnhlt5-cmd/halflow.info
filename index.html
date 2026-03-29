@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halflow — 7/24 Dijital Sekreter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --accent: #e91e8c;
+      --accent-dark: #c4177a;
+      --glow: rgba(233,30,140,0.15);
+      --bg: #070709;
+      --bg2: #0a0a0d;
+      --border: rgba(255,255,255,0.08);
+      --border-accent: rgba(233,30,140,0.25);
+      --text: #f0f0f4;
+      --text2: #7a7a8c;
+      --text3: #3a3a4a;
+      --card: rgba(255,255,255,0.035);
+      --card2: rgba(255,255,255,0.055);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── NAV ── */
+    nav { padding: 22px 0; position: sticky; top: 0; z-index: 100; background: rgba(7,7,9,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+    nav.scrolled { border-color: var(--border); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.3rem; font-weight: 900; letter-spacing: -0.04em; color: var(--text); text-decoration: none; }
+    .logo em { color: var(--accent); font-style: normal; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-link { font-size: 0.85rem; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: var(--text); }
+    .btn-nav { display: inline-flex; align-items: center; gap: 6px; padding: 9px 20px; background: var(--accent); color: #fff; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+    .btn-nav:hover { background: var(--accent-dark); box-shadow: 0 4px 20px rgba(233,30,140,0.4); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); border-radius: 2px; }
+
+    /* ── HERO ── */
+    .hero { padding: 72px 0 80px; position: relative; overflow: hidden; }
+    .hero-glow { position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, rgba(233,30,140,0.08) 0%, transparent 65%); pointer-events: none; }
+    #canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+
+    .hero-tag { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border-accent); background: rgba(233,30,140,0.06); color: var(--accent); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 13px; border-radius: 100px; margin-bottom: 22px; }
+    .hero-tag::before { content:''; width:5px; height:5px; background:var(--accent); border-radius:50%; animation: blink 1.8s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    h1 { font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 900; line-height: 1.07; letter-spacing: -0.04em; margin-bottom: 20px; }
+    h1 span { color: var(--accent); }
+    .hero-sub { font-size: 1.05rem; color: var(--text2); line-height: 1.75; margin-bottom: 32px; }
+    .btn-main { display: inline-flex; align-items: center; gap: 8px; padding: 15px 28px; background: var(--accent); color: #fff; border-radius: 10px; font-size: 1rem; font-weight: 700; text-decoration: none; transition: all 0.2s; }
+    .btn-main:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(233,30,140,0.4); }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 15px 24px; background: transparent; color: var(--text2); border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+    .cta-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .cta-fine { font-size: 0.76rem; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+    .cta-fine::before { content:'✓'; color: var(--accent); font-weight: 700; }
+
+    /* phone mockup */
+    .phone-wrap { position: relative; display: flex; justify-content: center; }
+    .phone {
+      width: 280px; background: #0f0f12; border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 36px; padding: 14px; box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04), inset 0 0 0 1px rgba(255,255,255,0.03);
+      position: relative;
+    }
+    .phone::before { content:''; position:absolute; top:14px; left:50%; transform:translateX(-50%); width:60px; height:5px; background:rgba(255,255,255,0.1); border-radius:100px; }
+    .phone-screen { background: var(--bg); border-radius: 24px; overflow: hidden; margin-top: 18px; }
+    .phone-topbar { background: #111; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
+    .phone-av { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #9c27b0); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; flex-shrink: 0; }
+    .phone-name { font-size: 0.72rem; font-weight: 700; }
+    .phone-status { font-size: 0.6rem; color: #22c55e; }
+    .phone-msgs { padding: 10px; display: flex; flex-direction: column; gap: 7px; }
+    .pm { max-width: 80%; }
+    .pm.me { align-self: flex-end; }
+    .pb { padding: 7px 10px; border-radius: 11px; font-size: 0.68rem; line-height: 1.45; }
+    .pb.bot { background: #1a1a1f; color: var(--text2); border-bottom-left-radius: 3px; }
+    .pb.user { background: var(--accent); color: #fff; border-bottom-right-radius: 3px; }
+    .pt { font-size: 0.55rem; color: var(--text3); margin-top: 2px; padding: 0 3px; }
+    .pm.me .pt { text-align: right; }
+    .typing-ph { display: flex; gap: 3px; padding: 7px 10px; background: #1a1a1f; border-radius: 11px; border-bottom-left-radius: 3px; width: fit-content; }
+    .typing-ph span { width: 4px; height: 4px; background: var(--text3); border-radius: 50%; animation: tdot 1.2s infinite; }
+    .typing-ph span:nth-child(2){animation-delay:.2s} .typing-ph span:nth-child(3){animation-delay:.4s}
+    @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-4px);opacity:1}}
+    .phone-glow { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); width: 200px; height: 80px; background: radial-gradient(ellipse, rgba(233,30,140,0.2), transparent 70%); pointer-events: none; }
+
+    /* ── PROOF STRIP ── */
+    .proof-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 32px 0; background: var(--bg2); }
+    .proof-inner { display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 24px; }
+    .proof-stat { text-align: center; }
+    .proof-num { font-size: 2rem; font-weight: 900; letter-spacing: -0.04em; line-height: 1; }
+    .proof-num em { color: var(--accent); font-style: normal; }
+    .proof-label { font-size: 0.72rem; color: var(--text2); margin-top: 5px; }
+    .proof-div { width: 1px; height: 44px; background: var(--border); }
+
+    /* ── SECTIONS ── */
+    .sec { padding: 88px 0; }
+    .sec.alt { background: var(--bg2); }
+    .sec-label { display: block; color: var(--accent); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+    .sec-title { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 14px; }
+    .sec-sub { color: var(--text2); font-size: 0.97rem; line-height: 1.75; max-width: 520px; }
+    .sec-head { margin-bottom: 52px; }
+    .center { text-align: center; }
+    .center .sec-sub { margin: 0 auto; }
+
+    /* ── NASIL ÇALIŞIR ── */
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .step-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; position: relative; overflow: hidden; transition: all 0.3s; }
+    .step-card:hover { border-color: var(--border-accent); transform: translateY(-3px); }
+    .step-num-big { font-size: 4rem; font-weight: 900; color: rgba(233,30,140,0.08); letter-spacing: -0.04em; line-height: 1; margin-bottom: 16px; }
+    .step-icon { width: 44px; height: 44px; background: var(--glow); border: 1px solid var(--border-accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 14px; }
+    .step-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .step-card p { font-size: 0.84rem; color: var(--text2); line-height: 1.65; }
+    .step-detail { margin-top: 12px; padding: 10px 12px; background: rgba(233,30,140,0.05); border: 1px solid var(--border-accent); border-radius: 8px; font-size: 0.75rem; color: var(--text2); }
+
+    /* ── SEKTÖRLER ── */
+    .sectors-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .sector { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px 16px; text-align: center; transition: all 0.3s; cursor: default; }
+    .sector:hover { border-color: var(--border-accent); box-shadow: 0 0 24px var(--glow); transform: translateY(-3px); }
+    .sector-emoji { font-size: 2.2rem; display: block; margin-bottom: 12px; }
+    .sector h3 { font-size: 0.88rem; font-weight: 700; margin-bottom: 6px; }
+    .sector p { font-size: 0.74rem; color: var(--text2); line-height: 1.5; }
+
+    /* ── FEATURES ── */
+    .feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .feat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; display: flex; gap: 16px; transition: all 0.3s; }
+    .feat:hover { border-color: var(--border-accent); background: var(--card2); }
+    .feat-icon { width: 42px; height: 42px; background: var(--glow); border: 1px solid var(--border-accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .feat h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; }
+    .feat p { font-size: 0.8rem; color: var(--text2); line-height: 1.6; }
+
+    /* ── ÖNCE / SONRA ── */
+    .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+    .ba-side { display: flex; flex-direction: column; gap: 10px; }
+    .ba-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 12px; border-radius: 6px; margin-bottom: 4px; display: inline-block; }
+    .ba-title.bad { background: rgba(239,68,68,0.1); color: #ef4444; }
+    .ba-title.good { background: rgba(34,197,94,0.1); color: #22c55e; }
+    .ba-item { display: flex; align-items: flex-start; gap: 10px; padding: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; font-size: 0.83rem; color: var(--text2); line-height: 1.5; }
+    .ba-item.good-item { border-color: rgba(34,197,94,0.15); background: rgba(34,197,94,0.03); }
+    .ba-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .ba-dot.red { background: #ef4444; }
+    .ba-dot.green { background: #22c55e; }
+
+    /* ── TESTİMONİALLER ── */
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .testi-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; }
+    .testi-stars { color: #f59e0b; font-size: 0.82rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .testi-text { font-size: 0.86rem; color: var(--text2); line-height: 1.75; flex: 1; margin-bottom: 18px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .testi-name { font-size: 0.84rem; font-weight: 700; }
+    .testi-role { font-size: 0.7rem; color: var(--text2); }
+
+    /* ── FİYATLANDIRMA ── */
+    .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; position: relative; }
+    .price-card.hot { border-color: var(--border-accent); background: rgba(233,30,140,0.04); }
+    .price-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: 0.68rem; font-weight: 700; padding: 3px 13px; border-radius: 100px; white-space: nowrap; }
+    .price-name { font-size: 0.72rem; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 10px; }
+    .price-amount { font-size: 2rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 2px; }
+    .price-amount span { font-size: 0.85rem; font-weight: 400; color: var(--text2); }
+    .price-sub { font-size: 0.76rem; color: var(--text2); margin-bottom: 20px; }
+    .price-hr { border: none; border-top: 1px solid var(--border); margin-bottom: 20px; }
+    .price-list { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+    .price-list li { display: flex; align-items: center; gap: 8px; font-size: 0.83rem; }
+    .pc { width: 16px; height: 16px; border-radius: 50%; background: var(--glow); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 0.58rem; flex-shrink: 0; }
+    .px { width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--text3); font-size: 0.6rem; flex-shrink: 0; }
+    .price-list li.off { color: var(--text3); }
+    .btn-price { display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px; border-radius: 9px; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .btn-price.primary { background: var(--accent); color: #fff; }
+    .btn-price.primary:hover { background: var(--accent-dark); box-shadow: 0 4px 20px rgba(233,30,140,0.4); }
+    .btn-price.outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-price.outline:hover { border-color: var(--border-accent); color: var(--accent); }
+
+    /* ── SSS ── */
+    .faq-list { max-width: 680px; margin: 52px auto 0; display: flex; flex-direction: column; gap: 9px; }
+    .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 17px 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600; gap: 14px; user-select: none; transition: color 0.2s; }
+    .faq-q:hover { color: var(--accent); }
+    .faq-icon { width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,0.05); color: var(--text2); font-size: 1rem; transition: all 0.3s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--glow); color: var(--accent); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .faq-a-inner { padding: 0 20px 17px; font-size: 0.86rem; color: var(--text2); line-height: 1.75; }
+    .faq-item.open .faq-a { max-height: 300px; }
+
+    /* ── FINAL CTA ── */
+    .final-sec { padding: 80px 0; }
+    .final-box { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 72px 48px; text-align: center; position: relative; overflow: hidden; }
+    .final-box::before { content:''; position:absolute; top:50%;left:50%;transform:translate(-50%,-50%); width:600px;height:300px; background:radial-gradient(ellipse,rgba(233,30,140,0.07) 0%,transparent 65%); pointer-events:none; }
+    .final-box h2 { font-size: clamp(1.8rem,3.5vw,2.8rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 14px; position: relative; }
+    .final-box p { color: var(--text2); font-size: 0.97rem; max-width: 460px; margin: 0 auto 32px; line-height: 1.75; position: relative; }
+    .final-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; position: relative; }
+    .final-fine { margin-top: 16px; font-size: 0.73rem; color: var(--text3); position: relative; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 24px 0; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-inner p { font-size: 0.75rem; color: var(--text2); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 0.75rem; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── ANİMASYON ── */
+    .fi { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fi.v { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .phone-wrap { display: none; }
+      .sectors-grid { grid-template-columns: repeat(3,1fr); }
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+      .price-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+    }
+    @media (max-width: 768px) {
+      .nav-link { display: none; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .ba-grid { grid-template-columns: 1fr; }
+      .sectors-grid { grid-template-columns: repeat(2,1fr); }
+      .testi-grid { grid-template-columns: 1fr; }
+      .final-box { padding: 44px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="logo">hal<em>flow</em></a>
+    <div class="nav-right">
+      <a href="#nasil" class="nav-link">Nasıl Çalışır</a>
+      <a href="#fiyat" class="nav-link">Fiyatlar</a>
+      <a href="https://halitautomation.com" class="nav-link" target="_blank">Tüm Hizmetler</a>
+      <a href="mailto:info@halitautomation.com" class="btn-nav">Demo İste →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <canvas id="canvas"></canvas>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="fi">
+        <div class="hero-tag">WhatsApp · Telegram · Yapay Zeka</div>
+        <h1>İşletmenizin<br /><span>7/24 Dijital</span><br />Sekreteri</h1>
+        <p class="hero-sub">Müşteri mesajlarını yanıtlar, randevu alır, bilgi verir.<br />Siz uyurken bile işiniz devam eder.</p>
+        <div class="cta-row">
+          <a href="mailto:info@halitautomation.com" class="btn-main">Ücretsiz Demo İste →</a>
+          <a href="#nasil" class="btn-ghost">Nasıl çalışır?</a>
+        </div>
+        <span class="cta-fine">14 gün ücretsiz · Kurulum 1 gün · Kredi kartı gerekmez</span>
+      </div>
+
+      <!-- TELEFON MOKİEP -->
+      <div class="phone-wrap fi">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-topbar">
+              <div class="phone-av">🤖</div>
+              <div>
+                <div class="phone-name">Halflow Asistan</div>
+                <div class="phone-status">● çevrimiçi</div>
+              </div>
+            </div>
+            <div class="phone-msgs" id="phoneMsgs">
+              <div class="pm me">
+                <div class="pb user">Yarın randevu alabilir miyim?</div>
+                <div class="pt">14:22</div>
+              </div>
+              <div class="pm" id="pm1" style="opacity:0;transition:opacity .4s">
+                <div class="pb bot">Merhaba! 😊 Yarın 10:00 veya 15:30 müsait. Hangisi uygun?</div>
+                <div class="pt">14:22</div>
+              </div>
+              <div class="pm me" id="pm2" style="opacity:0;transition:opacity .4s">
+                <div class="pb user">10:00 olsun, Ayşe Kaya</div>
+                <div class="pt">14:23</div>
+              </div>
+              <div class="pm" id="pm3" style="opacity:0;transition:opacity .4s">
+                <div class="pb bot">✅ Randevunuz oluşturuldu!<br/><strong>Ayşe Kaya — Yarın 10:00</strong><br/>Hatırlatma gönderilecek 🌸</div>
+                <div class="pt">14:23</div>
+              </div>
+              <div class="typing-ph" id="typing" style="opacity:0;transition:opacity .3s">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-glow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<div class="proof-strip">
+  <div class="container">
+    <div class="proof-inner">
+      <div class="proof-stat"><div class="proof-num">50<em>+</em></div><div class="proof-label">Aktif İşletme</div></div>
+      <div class="proof-div"></div>
+      <div class="proof-stat"><div class="proof-num">%<em>90</em></div><div class="proof-label">Otomasyon Oranı</div></div>
+      <div class="proof-div"></div>
+      <div class="proof-stat"><div class="proof-num">7<em>/24</em></div><div class="proof-label">Kesintisiz Çalışma</div></div>
+      <div class="proof-div"></div>
+      <div class="proof-stat"><div class="proof-num">1<em> gün</em></div><div class="proof-label">Kurulum Süresi</div></div>
+      <div class="proof-div"></div>
+      <div class="proof-stat"><div class="proof-num">3<em>dk</em></div><div class="proof-label">Ortalama Yanıt</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ÖNCE / SONRA -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head center fi">
+      <span class="sec-label">Fark</span>
+      <h2 class="sec-title">Günde kaç saat mesaj okuyorsunuz?</h2>
+      <p class="sec-sub">Hizmet sektöründe çalışan herkesin sorunu aynı. Çözümü farklı.</p>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-side fi">
+        <span class="ba-title bad">⚠️ Otomasyon Öncesi</span>
+        <div class="ba-item"><div class="ba-dot red"></div>Günde 40-60 WhatsApp mesajına tek tek yanıt veriyorsunuz</div>
+        <div class="ba-item"><div class="ba-dot red"></div>Akşam 22:00'de gelen randevu sorularına cevap vermek zorunda kalıyorsunuz</div>
+        <div class="ba-item"><div class="ba-dot red"></div>Randevular çakışıyor, hatırlatmaları unutuyorsunuz</div>
+        <div class="ba-item"><div class="ba-dot red"></div>Tatilde bile telefonunuz elinizden düşmüyor</div>
+        <div class="ba-item"><div class="ba-dot red"></div>Aynı soruları her gün tekrar tekrar yanıtlıyorsunuz</div>
+      </div>
+      <div class="ba-side fi">
+        <span class="ba-title good">✓ Halflow ile</span>
+        <div class="ba-item good-item"><div class="ba-dot green"></div>Mesajların %90'ına AI saniyeler içinde yanıt veriyor</div>
+        <div class="ba-item good-item"><div class="ba-dot green"></div>Gece-gündüz, hafta sonu fark etmeksizin sistem çalışıyor</div>
+        <div class="ba-item good-item"><div class="ba-dot green"></div>Randevular otomatik oluşuyor, hatırlatmalar gönderiliyor</div>
+        <div class="ba-item good-item"><div class="ba-dot green"></div>Acil durumda sizi anında uyarıyor, gerisi otomatik</div>
+        <div class="ba-item good-item"><div class="ba-dot green"></div>Siz işinize ve müşterilerinize odaklanıyorsunuz</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NASIL ÇALIŞIR -->
+<section id="nasil" class="sec alt">
+  <div class="container">
+    <div class="sec-head center fi">
+      <span class="sec-label">Süreç</span>
+      <h2 class="sec-title">3 adımda aktif</h2>
+      <p class="sec-sub">Teknik bilgiye gerek yok. 1 günde sisteminiz çalışmaya başlar.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card fi">
+        <div class="step-num-big">01</div>
+        <div class="step-icon">📋</div>
+        <h3>Bilgileri Girin</h3>
+        <p>İşletme adınız, çalışma saatleriniz ve sık sorulan soruları sisteme giriyorsunuz. 15 dakika sürer.</p>
+        <div class="step-detail">Fiyatlarınız, adresiniz, hizmetleriniz — AI bunları ezberler.</div>
+      </div>
+      <div class="step-card fi">
+        <div class="step-num-big">02</div>
+        <div class="step-icon">🔗</div>
+        <h3>Hattı Bağlayın</h3>
+        <p>WhatsApp Business veya Telegram hesabınızı tek tıkla sisteme bağlıyorsunuz.</p>
+        <div class="step-detail">Mevcut numaranızı kullanıyorsunuz, yeni numara gerekmez.</div>
+      </div>
+      <div class="step-card fi">
+        <div class="step-num-big">03</div>
+        <div class="step-icon">⚡</div>
+        <h3>Hazır</h3>
+        <p>Sistem devreye girer. İlk mesajdan itibaren AI yanıt vermeye başlar.</p>
+        <div class="step-detail">Siz paneli istediğiniz zaman açıp konuşmaları takip edebilirsiniz.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ÖZELLİKLER -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head fi">
+      <span class="sec-label">Özellikler</span>
+      <h2 class="sec-title">Gerçek bir sekreter gibi,<br />100 kat daha hızlı</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat fi">
+        <div class="feat-icon">📅</div>
+        <div><h3>Otomatik Randevu</h3><p>Müşteri saat sorar, uygunlara bakar, seçer, takvime eklenir. Onay SMS'i gider. Hiç müdahale gerekmez.</p></div>
+      </div>
+      <div class="feat fi">
+        <div class="feat-icon">💬</div>
+        <div><h3>Akıllı Soru-Cevap</h3><p>Fiyat, adres, çalışma saati, hizmet bilgisi — günlük soruların %90'ına AI anında yanıt verir.</p></div>
+      </div>
+      <div class="feat fi">
+        <div class="feat-icon">🔔</div>
+        <div><h3>Acil Bildirim</h3><p>Şikâyet, acil durum veya VIP müşteri mesajlarında sizi anında uyarır. Önemli olanı kaçırmazsınız.</p></div>
+      </div>
+      <div class="feat fi">
+        <div class="feat-icon">📊</div>
+        <div><h3>Müşteri Takibi</h3><p>Kaç kez geldi, son randevu ne zaman, en çok ne soruyor — hepsi kayıt altında, istediğinizde bakabilirsiniz.</p></div>
+      </div>
+      <div class="feat fi">
+        <div class="feat-icon">🌙</div>
+        <div><h3>7/24 Aktif</h3><p>Gece 2'de gelen mesaja sabah 2 yanıtı. Müşterileriniz sizi ulaşılabilir buluyor, rakiplerinize gitmiyor.</p></div>
+      </div>
+      <div class="feat fi">
+        <div class="feat-icon">🔧</div>
+        <div><h3>Kolay Yönetim</h3><p>Bilgileri değiştirmek isterseniz panelden 2 dakikada güncelliyorsunuz. Teknik destek gerekmez.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEKTÖRLER -->
+<section class="sec alt">
+  <div class="container">
+    <div class="sec-head center fi">
+      <span class="sec-label">Sektörler</span>
+      <h2 class="sec-title">Her işletme türü için hazır</h2>
+      <p class="sec-sub">Sektörünüze özel şablon ile 1 günde kurulum.</p>
+    </div>
+    <div class="sectors-grid">
+      <div class="sector fi"><span class="sector-emoji">🏥</span><h3>Klinikler</h3><p>Hasta randevusu, hatırlatma, sonuç bildirimi</p></div>
+      <div class="sector fi"><span class="sector-emoji">🍽️</span><h3>Restoranlar</h3><p>Masa rezervasyonu, menü bilgisi, özel günler</p></div>
+      <div class="sector fi"><span class="sector-emoji">🎓</span><h3>Okullar & Kurslar</h3><p>Kayıt bilgisi, ders programı, veli soruları</p></div>
+      <div class="sector fi"><span class="sector-emoji">🛍️</span><h3>E-Ticaret</h3><p>Sipariş takibi, iade, ürün bilgisi sorguları</p></div>
+      <div class="sector fi"><span class="sector-emoji">🏨</span><h3>Oteller</h3><p>Oda rezervasyonu, check-in, misafir talepleri</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTİMONİALLER -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head center fi">
+      <span class="sec-label">Müşteriler</span>
+      <h2 class="sec-title">Gerçek işletmeler, gerçek sonuçlar</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card fi">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Allah razı olsun, akşam ilk defa kafam rahat yemek yedim. Öğrencilerden gelen mesajların %90'ına sistem kendisi yanıt veriyor. Ben sadece öğretmenliğe odaklanıyorum."</p>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#e91e8c,#9c27b0)">AY</div>
+          <div><div class="testi-name">Ayşe Yıldırım</div><div class="testi-role">Özel Ders Öğretmeni, İstanbul</div></div>
+        </div>
+      </div>
+      <div class="testi-card fi">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Yoğun akşamlar masa sorularına yetişemiyorduk. Şimdi sistem otomatik yanıtlıyor ve rezervasyon alıyor. Hiç masa boş kalmıyor, telefona bakma derdim bitti."</p>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">MK</div>
+          <div><div class="testi-name">Mehmet Karahan</div><div class="testi-role">Restoran İşletmecisi, Ankara</div></div>
+        </div>
+      </div>
+      <div class="testi-card fi">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Kliniğimizde randevu hatırlatmaları ve hasta takibi tamamen otomatik. Hemşiremiz artık asıl işine odaklanıyor. Hasta memnuniyetimiz gözle görülür arttı."</p>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#22c55e,#06b6d4)">DÇ</div>
+          <div><div class="testi-name">Dr. Deniz Çelik</div><div class="testi-role">Diş Kliniği, İzmir</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FİYATLANDIRMA -->
+<section id="fiyat" class="sec alt">
+  <div class="container">
+    <div class="sec-head center fi">
+      <span class="sec-label">Fiyatlandırma</span>
+      <h2 class="sec-title">Şeffaf, sabit fiyatlar</h2>
+      <p class="sec-sub">Tek seferlik kurulum + opsiyonel aylık bakım. Gizli ücret yok.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card fi">
+        <div class="price-name">Başlangıç</div>
+        <div class="price-amount">990 <span>TL/ay</span></div>
+        <div class="price-sub">+ 2.500 TL kurulum (bir kez)</div>
+        <hr class="price-hr" />
+        <ul class="price-list">
+          <li><div class="pc">✓</div> WhatsApp veya Telegram</li>
+          <li><div class="pc">✓</div> Aylık 500 mesaj</li>
+          <li><div class="pc">✓</div> Otomatik randevu</li>
+          <li><div class="pc">✓</div> Soru-cevap sistemi</li>
+          <li class="off"><div class="px">✕</div> Çoklu kanal</li>
+          <li class="off"><div class="px">✕</div> Analitik panel</li>
+        </ul>
+        <a href="mailto:info@halitautomation.com" class="btn-price outline">Başla</a>
+      </div>
+      <div class="price-card hot fi">
+        <div class="price-badge">⭐ En Popüler</div>
+        <div class="price-name">Profesyonel</div>
+        <div class="price-amount">2.490 <span>TL/ay</span></div>
+        <div class="price-sub">+ 5.000 TL kurulum (bir kez)</div>
+        <hr class="price-hr" />
+        <ul class="price-list">
+          <li><div class="pc">✓</div> WhatsApp + Telegram</li>
+          <li><div class="pc">✓</div> Aylık 3.000 mesaj</li>
+          <li><div class="pc">✓</div> Randevu + hatırlatma</li>
+          <li><div class="pc">✓</div> Gelişmiş soru-cevap</li>
+          <li><div class="pc">✓</div> Analitik panel</li>
+          <li><div class="pc">✓</div> Öncelikli destek</li>
+        </ul>
+        <a href="mailto:info@halitautomation.com" class="btn-price primary">Hemen Başla</a>
+      </div>
+      <div class="price-card fi">
+        <div class="price-name">Kurumsal</div>
+        <div class="price-amount">5.990 <span>TL/ay</span></div>
+        <div class="price-sub">+ Özel kurulum fiyatı</div>
+        <hr class="price-hr" />
+        <ul class="price-list">
+          <li><div class="pc">✓</div> Sınırsız kanal</li>
+          <li><div class="pc">✓</div> Sınırsız mesaj</li>
+          <li><div class="pc">✓</div> API entegrasyonu</li>
+          <li><div class="pc">✓</div> Çoklu şube</li>
+          <li><div class="pc">✓</div> Özel AI yapılandırması</li>
+          <li><div class="pc">✓</div> 7/24 destek</li>
+        </ul>
+        <a href="mailto:info@halitautomation.com" class="btn-price outline">Teklif İste</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SSS -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-head center fi">
+      <span class="sec-label">SSS</span>
+      <h2 class="sec-title">Aklınızdaki sorular</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item fi"><div class="faq-q">Teknik bilgim olmadan kullanabilir miyim?<div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner">Evet. Formu doldurup WhatsApp'ı bağlıyorsunuz, gerisini biz hallediyoruz. Ortalama kurulum 1 gün.</div></div></div>
+      <div class="faq-item fi"><div class="faq-q">Mevcut WhatsApp numaramı kullanabilir miyim?<div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner">Evet. WhatsApp Business hesabınızı bağlıyorsunuz. Numara değiştirmenize gerek yok.</div></div></div>
+      <div class="faq-item fi"><div class="faq-q">AI yanlış yanıt verirse ne olur?<div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner">Emin olmadığı durumlarda sizi yönlendiriyor. "Bu konuda sizi uzmanımıza bağlıyorum" deyip sizi haberdar ediyor. Hiçbir mesaj kaybolmuyor.</div></div></div>
+      <div class="faq-item fi"><div class="faq-q">İstediğimde iptal edebilir miyim?<div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner">Evet, ceza veya ek ücret olmadan istediğiniz zaman iptal edebilirsiniz.</div></div></div>
+      <div class="faq-item fi"><div class="faq-q">Verilerim güvende mi?<div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner">Tüm veriler şifreli olarak saklanır. KVKK uyumlu çalışıyoruz. Müşteri verileriniz asla üçüncü taraflarla paylaşılmaz.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-sec">
+  <div class="container">
+    <div class="final-box fi">
+      <h2>14 gün ücretsiz deneyin</h2>
+      <p>Kredi kartı gerekmez. Beğenmezseniz ücret ödemezsiniz. Kurulum 1 gün.</p>
+      <div class="final-actions">
+        <a href="mailto:info@halitautomation.com" class="btn-main">📩 Demo İste</a>
+        <a href="https://wa.me/90XXXXXXXXXX" class="btn-ghost">💬 WhatsApp'tan Yaz</a>
+      </div>
+      <p class="final-fine">info@halitautomation.com</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <p>© 2026 Halflow — <a href="https://halitautomation.com" style="color:var(--text2);text-decoration:none">halitautomation.com</a></p>
+      <div class="footer-links">
+        <a href="https://halitautomation.com">Tüm Hizmetler</a>
+        <a href="#fiyat">Fiyatlar</a>
+        <a href="mailto:info@halitautomation.com">İletişim</a>
+        <a href="#">Gizlilik</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// CANVAS
+const c=document.getElementById('canvas'),x=c.getContext('2d');
+let W,H,pts;
+const resize=()=>{W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const init=()=>{pts=Array.from({length:50},()=>({x:rnd(0,W),y:rnd(0,H),r:rnd(1,2.8),a:rnd(.08,.45),dx:rnd(-.2,.2),dy:rnd(-.35,-.05),p:rnd(0,Math.PI*2)}));};
+const draw=()=>{
+  x.clearRect(0,0,W,H);
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<110){x.beginPath();x.moveTo(pts[i].x,pts[i].y);x.lineTo(pts[j].x,pts[j].y);x.strokeStyle=`rgba(233,30,140,${.09*(1-d/110)})`;x.lineWidth=1;x.stroke();}
+  }
+  pts.forEach(p=>{p.p+=.025;const a=p.a*(.65+.35*Math.sin(p.p));x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(233,30,140,${a})`;x.fill();p.x+=p.dx;p.y+=p.dy;if(p.y<-8){p.y=H+8;p.x=rnd(0,W);}if(p.x<-8)p.x=W+8;if(p.x>W+8)p.x=-8;});
+  requestAnimationFrame(draw);
+};
+resize();init();draw();
+window.addEventListener('resize',()=>{resize();init();});
+
+// NAV SCROLL
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>40));
+
+// CHAT ANİMASYON
+function runChat(){
+  ['pm1','pm2','pm3'].forEach(id=>document.getElementById(id).style.opacity='0');
+  const t=document.getElementById('typing');
+  t.style.opacity='0';
+  setTimeout(()=>t.style.opacity='1',500);
+  [[900,'pm1'],[2200,'pm2'],[3500,'pm3']].forEach(([d,id],i)=>{
+    setTimeout(()=>{
+      if(i===0)t.style.opacity='0';
+      document.getElementById(id).style.opacity='1';
+      if(i<2)setTimeout(()=>t.style.opacity='1',400);
+      else setTimeout(()=>{t.style.opacity='0';setTimeout(runChat,3000);},1200);
+    },d);
+  });
+}
+setTimeout(runChat,800);
+
+// FAQ
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click',()=>{
+    const open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!open)item.classList.add('open');
+  });
+});
+
+// FADE IN
+const io=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('v'),i*70);io.unobserve(e.target);}});
+},{threshold:.1});
+document.querySelectorAll('.fi').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
