@@ -187,6 +187,24 @@
     .faq-a-inner { padding: 0 20px 17px; font-size: 0.86rem; color: var(--text2); line-height: 1.75; }
     .faq-item.open .faq-a { max-height: 300px; }
 
+    /* ── CONTACT FORM ── */
+    .contact-sec { padding: 80px 0; }
+    .contact-form { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+    .contact-form input, .contact-form textarea, .contact-form select {
+      width: 100%; padding: 14px 18px; background: var(--card2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .contact-form input:focus, .contact-form textarea:focus, .contact-form select:focus { border-color: var(--accent); }
+    .contact-form textarea { resize: vertical; min-height: 110px; }
+    .contact-form select option { background: #1a1a2e; }
+    .contact-form button { width: 100%; padding: 15px; background: var(--accent); color: #fff; border: none;
+      border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+    .contact-form button:hover { background: var(--accent-dark); box-shadow: 0 8px 30px rgba(233,30,140,0.4); }
+    .form-success { display: none; text-align: center; padding: 20px; color: #4ade80; font-weight: 600; }
+
     /* ── FINAL CTA ── */
     .final-sec { padding: 80px 0; }
     .final-box { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 72px 48px; text-align: center; position: relative; overflow: hidden; }
@@ -237,7 +255,7 @@
       <a href="#nasil" class="nav-link">Nasıl Çalışır</a>
       <a href="#fiyat" class="nav-link">Fiyatlar</a>
       <a href="https://halitautomation.com" class="nav-link" target="_blank">Tüm Hizmetler</a>
-      <a href="mailto:info@halitautomation.com" class="btn-nav">Demo İste →</a>
+      <a href="#demo" class="btn-nav">Demo İste →</a>
     </div>
   </div>
 </nav>
@@ -253,7 +271,7 @@
         <h1>İşletmenizin<br /><span>7/24 Dijital</span><br />Sekreteri</h1>
         <p class="hero-sub">Müşteri mesajlarını yanıtlar, randevu alır, bilgi verir.<br />Siz uyurken bile işiniz devam eder.</p>
         <div class="cta-row">
-          <a href="mailto:info@halitautomation.com" class="btn-main">Ücretsiz Demo İste →</a>
+          <a href="#demo" class="btn-main">Ücretsiz Demo İste →</a>
           <a href="#nasil" class="btn-ghost">Nasıl çalışır?</a>
         </div>
         <span class="cta-fine">14 gün ücretsiz · Kurulum 1 gün · Kredi kartı gerekmez</span>
@@ -491,7 +509,7 @@
           <li class="off"><div class="px">✕</div> Çoklu kanal</li>
           <li class="off"><div class="px">✕</div> Analitik panel</li>
         </ul>
-        <a href="mailto:info@halitautomation.com" class="btn-price outline">Başla</a>
+        <a href="#demo" class="btn-price outline">Başla</a>
       </div>
       <div class="price-card hot fi">
         <div class="price-badge">⭐ En Popüler</div>
@@ -507,7 +525,7 @@
           <li><div class="pc">✓</div> Analitik panel</li>
           <li><div class="pc">✓</div> Öncelikli destek</li>
         </ul>
-        <a href="mailto:info@halitautomation.com" class="btn-price primary">Hemen Başla</a>
+        <a href="#demo" class="btn-price primary">Hemen Başla</a>
       </div>
       <div class="price-card fi">
         <div class="price-name">Kurumsal</div>
@@ -522,7 +540,7 @@
           <li><div class="pc">✓</div> Özel AI yapılandırması</li>
           <li><div class="pc">✓</div> 7/24 destek</li>
         </ul>
-        <a href="mailto:info@halitautomation.com" class="btn-price outline">Teklif İste</a>
+        <a href="#demo" class="btn-price outline">Teklif İste</a>
       </div>
     </div>
   </div>
@@ -545,6 +563,34 @@
   </div>
 </section>
 
+<!-- CONTACT FORM -->
+<section id="demo" class="contact-sec alt" style="background:var(--bg2);">
+  <div class="container">
+    <div class="sec-head center fi">
+      <span class="sec-label">Demo</span>
+      <h2 class="sec-title">Ücretsiz demo isteyin</h2>
+      <p class="sec-sub">Formu doldurun, 1 saat içinde WhatsApp'tan dönelim. Kredi kartı gerekmez.</p>
+    </div>
+    <form class="contact-form fi" id="contactForm" onsubmit="sendToWhatsApp(event)">
+      <input type="text" id="cf-name" placeholder="Adınız Soyadınız *" required />
+      <input type="tel" id="cf-phone" placeholder="WhatsApp Numaranız (05XX XXX XX XX) *" required />
+      <select id="cf-sector">
+        <option value="" disabled selected>Sektörünüz seçin</option>
+        <option>Klinik / Sağlık</option>
+        <option>Restoran / Kafe</option>
+        <option>Okul / Kurs</option>
+        <option>E-Ticaret / Mağaza</option>
+        <option>Otel / Konaklama</option>
+        <option>Güzellik / Kuaför</option>
+        <option>Diğer</option>
+      </select>
+      <textarea id="cf-msg" placeholder="Kısa bir not (opsiyonel) — Kaç mesaj alıyorsunuz, ne tür sorular geliyor?"></textarea>
+      <button type="submit">💬 WhatsApp'tan Demo İste →</button>
+    </form>
+    <div class="form-success" id="formSuccess">✅ Teşekkürler! WhatsApp açılıyor...</div>
+  </div>
+</section>
+
 <!-- FINAL CTA -->
 <section class="final-sec">
   <div class="container">
@@ -552,8 +598,8 @@
       <h2>14 gün ücretsiz deneyin</h2>
       <p>Kredi kartı gerekmez. Beğenmezseniz ücret ödemezsiniz. Kurulum 1 gün.</p>
       <div class="final-actions">
-        <a href="mailto:info@halitautomation.com" class="btn-main">📩 Demo İste</a>
-        <a href="https://wa.me/90XXXXXXXXXX" class="btn-ghost">💬 WhatsApp'tan Yaz</a>
+        <a href="#demo" class="btn-main">📩 Demo İste</a>
+        <a href="https://wa.me/905551934807" class="btn-ghost">💬 WhatsApp'tan Yaz</a>
       </div>
       <p class="final-fine">info@halitautomation.com</p>
     </div>
@@ -622,6 +668,25 @@ document.querySelectorAll('.faq-item').forEach(item=>{
     if(!open)item.classList.add('open');
   });
 });
+
+// CONTACT FORM → WHATSAPP
+function sendToWhatsApp(e) {
+  e.preventDefault();
+  const name = document.getElementById('cf-name').value.trim();
+  const phone = document.getElementById('cf-phone').value.trim();
+  const sector = document.getElementById('cf-sector').value || 'Belirtilmedi';
+  const msg = document.getElementById('cf-msg').value.trim() || '-';
+  const text = `Merhaba! Halflow demo talep ediyorum.\n\n👤 Ad: ${name}\n📱 Telefon: ${phone}\n🏢 Sektör: ${sector}\n💬 Not: ${msg}`;
+  document.getElementById('formSuccess').style.display = 'block';
+  document.getElementById('contactForm').style.display = 'none';
+  const link = document.createElement('a');
+  link.href = 'https://wa.me/905551934807?text=' + encodeURIComponent(text);
+  link.target = '_blank';
+  link.rel = 'noopener';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 
 // FADE IN
 const io=new IntersectionObserver(entries=>{
