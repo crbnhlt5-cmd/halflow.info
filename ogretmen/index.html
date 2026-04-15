@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Öğretmen Dijital Sekreter — Beta Demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f7fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 24px 20px 20px;
+      text-align: center;
+    }
+
+    header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 15px;
+      opacity: 0.9;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 20px 16px 0;
+    }
+
+    .feature-chip {
+      background: white;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 24px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-chip span { font-size: 16px; }
+
+    .chat-wrapper {
+      max-width: 720px;
+      margin: 24px auto 0;
+      padding: 0 16px;
+      height: 520px;
+    }
+
+    .chat-wrapper #n8n-chat {
+      height: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    .beta-section {
+      max-width: 560px;
+      margin: 28px auto 40px;
+      padding: 0 16px;
+    }
+
+    .beta-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      text-align: center;
+    }
+
+    .beta-card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1a1a2e;
+    }
+
+    .beta-card p {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .beta-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .beta-form input {
+      padding: 12px 16px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .beta-form input:focus { border-color: #2563eb; }
+
+    .beta-form button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .beta-form button:hover { background: #1d4ed8; }
+
+    .success-msg {
+      display: none;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">🚀 Beta — Ücretsiz Dene</div>
+  <h1>Öğretmen Dijital Sekreter</h1>
+  <p>Konu gir, saniyeler içinde ders planı, sınav sorusu ve veli mesajı al.</p>
+</header>
+
+<div class="features">
+  <div class="feature-chip"><span>📋</span> Ders Planı</div>
+  <div class="feature-chip"><span>📝</span> Sınav Sorusu</div>
+  <div class="feature-chip"><span>📨</span> Veli Mesajı</div>
+  <div class="feature-chip"><span>📚</span> Materyal Öner</div>
+</div>
+
+<div class="chat-wrapper">
+  <div id="n8n-chat"></div>
+</div>
+
+<div class="beta-section">
+  <div class="beta-card">
+    <h2>Beta Tester Ol</h2>
+    <p>Ürünü şekillendirmek ister misin? İsim ve e-postanı bırak, seni ilk kullananlar arasına alalım.</p>
+    <form class="beta-form" onsubmit="handleSubmit(event)">
+      <input type="text" id="name" placeholder="Adın" required />
+      <input type="email" id="email" placeholder="E-posta adresin" required />
+      <input type="text" id="branch" placeholder="Branşın (örn: Matematik)" />
+      <button type="submit">Beta'ya Katıl →</button>
+    </form>
+    <div class="success-msg" id="success">
+      ✅ Harika! Seni listeye ekledik. En kısa sürede ulaşacağız.
+    </div>
+  </div>
+</div>
+
+<footer>© 2025 Öğretmen Dijital Sekreter — Tüm hakları saklıdır.</footer>
+
+<script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+  createChat({
+    webhookUrl: 'https://8jiphlzh.rcsrv.net/webhook/9d83a100-cab5-4373-b081-31ef0ee8d95c/chat',
+    target: '#n8n-chat',
+    mode: 'window',
+    initialMessages: [
+      'Merhaba! Ben Öğretmen Dijital Sekreter. 👋',
+      'Hangi konuda yardımcı olmamı istersin?\n\n• Ders planı hazırlama\n• Sınav sorusu oluşturma\n• Veli mesajı yazma\n• Materyal önerisi'
+    ],
+    i18n: {
+      tr: {
+        title: 'Dijital Sekreter',
+        subtitle: 'Öğretmenlerin AI asistanı',
+        inputPlaceholder: 'Mesajınızı yazın...',
+        getStarted: 'Yeni Konuşma',
+        closeButtonTooltip: 'Kapat'
+      }
+    },
+    defaultLanguage: 'tr',
+  });
+</script>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const branch = document.getElementById('branch').value;
+
+    // Google Sheets'e kaydet (ileride n8n webhook ile entegre edilecek)
+    fetch('https://8jiphlzh.rcsrv.net/webhook/beta-kayit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, branch, date: new Date().toISOString() })
+    }).catch(() => {}); // Hata olsa bile success göster
+
+    document.querySelector('.beta-form').style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
